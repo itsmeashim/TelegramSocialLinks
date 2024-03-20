@@ -21,9 +21,10 @@ session_string = os.getenv("TG_SESSION")
 # User Client
 app = Client("my_account", session_string=session_string)
 
-@app.on_message(filters.channel | filters.chat(monitored_usernames))
+@app.on_message(filters.chat(monitored_usernames))
 async def check_message(client, message):
     try:
+        log.info(f"New Message")
 
         message_text = message.text
         message_caption = message.caption
@@ -45,6 +46,7 @@ async def check_message(client, message):
 
         filtered_urls = [urlparse(url).hostname for url in urls if urlparse(url).hostname not in filter_domains]
         logging.info(f"Filtered URLs: {filtered_urls}")
+        print(f"Filtered URLs: {filtered_urls}")
 
         if filtered_urls:
             await message.forward(GROUP_ID)
