@@ -46,12 +46,13 @@ async def check_message(client, message):
 
         # Extracting hostnames and filtering
 
-        urls = [tldextract.extract(url).registered_domain for url in urls]
+        urls = [tldextract.extract(url.strip('[').strip(']')).registered_domain for url in urls]
 
         try:
             filtered_urls = [url for url in urls if url not in filter_domains]
         except Exception as e:
             print(e)
+            logging.warning(f"Error filtering URLs: {e}")
             filtered_urls = []
 
         logging.info(f"Filtered URLs: {filtered_urls}")
