@@ -18,6 +18,11 @@ logging.basicConfig(level=logging.INFO)
 load_dotenv()
 
 GROUP_ID = os.getenv("GROUP_ID")
+try:
+    GROUP_ID = int(GROUP_ID)
+except Exception as e:
+    send_exception_to_discord(e, webhook_url)
+    print(e)
 webhook_url = os.getenv("WEBHOOK_URL")
 
 monitored_usernames = ["DRBTSolana", "osiuf238jofaidjfoisd"]  # Updated monitored usernames
