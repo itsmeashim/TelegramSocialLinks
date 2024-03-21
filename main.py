@@ -9,6 +9,9 @@ import os
 from dotenv import load_dotenv
 from ownserver_logger import send_exception_to_discord, send_message_to_discord
 import tldextract
+from urlextract import URLExtract
+
+extractor = URLExtract()
 
 logging.basicConfig(level=logging.INFO)
 
@@ -31,13 +34,24 @@ async def check_message(client, message):
         message_text = message.text
         message_caption = message.caption
         message_caption_entities = message.caption_entities
-        message_caption_entities = str(message_caption_entities)
+        entities_url = ""
+        for entities in message_caption_entities:
+            if entities.type == MessageEntityType.TEXT_LINK:
+                if "solscan.io" not  in entities.url:
+                    entities_url += entities.url + "  "
+                print(entities_url)
 
-        message_1 = str(message_text) + str(message_caption) + str(message_caption_entities)
+        message_caption_entities = entities_url
+        logging.info(f"entities_url: {message_caption_entities}")
 
-        message_text_lower = message_1.lower().replace("\n", " ").replace(",", " ")  # Replace commas and periods with spaces
+        message_1 = str(message_text) + "  " + str(message_caption) + " " + str(message_caption_entities)
 
-        urls = re.findall(r'http[s]?://[^\s)\]]+', message_text_lower)
+        message_text_lower = message_1.lower().replace("\n", " ").replace(",", " ").replace("]", " ").replace("[", " ").replace("(", " ").replace(")", " ").replace('"', ' ').replace("'", " ")
+
+        print(f"Message: {message_text_lower}")
+
+        extractor.find_urls
+        urls = extractor.find_urls(message_text_lower, only_unique=True)
         print(f"URLs: {urls}")
         logging.info(f"URLs: {urls}")
 
