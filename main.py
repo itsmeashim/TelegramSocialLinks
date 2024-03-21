@@ -35,11 +35,12 @@ async def check_message(client, message):
         message_caption = message.caption
         message_caption_entities = message.caption_entities
         entities_url = ""
-        for entities in message_caption_entities:
-            if entities.type == MessageEntityType.TEXT_LINK:
-                if "solscan.io" not  in entities.url:
-                    entities_url += entities.url + "  "
-                print(entities_url)
+        if message_caption_entities:
+            for entities in message_caption_entities:
+                if entities.type == MessageEntityType.TEXT_LINK:
+                    if "solscan.io" not  in entities.url:
+                        entities_url += entities.url + "  "
+                    print(entities_url)
 
         message_caption_entities = entities_url
         logging.info(f"entities_url: {message_caption_entities}")
