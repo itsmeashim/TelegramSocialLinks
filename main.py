@@ -21,7 +21,6 @@ GROUP_ID = os.getenv("GROUP_ID")
 try:
     GROUP_ID = int(GROUP_ID)
 except Exception as e:
-    send_exception_to_discord(e, webhook_url)
     print(e)
 webhook_url = os.getenv("WEBHOOK_URL")
 
@@ -38,7 +37,7 @@ async def check_message(client, message):
 
         message_text = message.text
         message_caption = message.caption
-        message_caption_entities = message.caption_entities
+        message_caption_entities = message.caption_entities or message.entities
         entities_url = ""
         if message_caption_entities:
             for entities in message_caption_entities:
